@@ -1,0 +1,76 @@
+db.student.find()  
+{  
+           "_id" : ObjectId("56254d4fdf2222265r4g12ds3d65f"),  
+           "name" : "Mick",  
+           "Course" : "btech",  
+           "batch_year" : 2018,  
+           "language" : ["c++", "java", "python"],  
+           "personal_details" :   
+                     {  
+                      "Father_name" : "Jonny",  
+                      "phone_no" : 8895321456,  
+                      "age" : 23,  
+                      "gender" : "Male",  
+                      "City" : "NewYork",  
+                     }              
+}  
+{  
+           "_id" : ObjectId("56254d4fdf2222265r4g12ds3d691"),  
+           "name" : "Zoya",  
+           "Course" : "BCA",  
+           "batch_year" : 2020,  
+           "language" : ["C#", "JavaScript"],  
+           "personal_details" :   
+                     {  
+                      "Father_name" : "Henry",  
+                      "phone_no" : 9874563698,  
+                      "age" : 20,  
+                      "gender" : "Female",  
+                      "City" : "London",  
+                     }  
+}  
+{  
+           "_id" : ObjectId("56254d4fdf2222265r4g12ds3d655"),  
+           "name" : "Jonny",  
+           "Course" : "MCA",  
+           "batch_year" : 2019,  
+           "language" : ["C#", "java", "PHP"],  
+           "personal_details" :   
+                     {  
+                      "Father_name" : "Thomas",  
+                      "phone_no" : 7845123698,  
+                      "age" : 24,  
+                      "gender" : "Male",  
+                      "City" : "London",  
+                     }            
+}  
+{  
+           "_id" : ObjectId("56254d4fdf2222265r4g12ds3d678"),  
+           "name" : "Oliver",  
+           "Course" : "BA",  
+           "batch_year" : 2017,  
+           "language" : ["c", "PHP"],  
+           "personal_details" :   
+                     {  
+                      "Father_name" : "William",  
+                      "phone_no" : 9997845123,  
+                      "age" : 25,  
+                      "gender" : "Male",  
+                      "City" : "Liverpool",  
+                     }             
+}  
+{  
+           "_id" : ObjectId("56254d4fdf2222265r4g12ds3d665"),  
+           "name" : "Mia",  
+           "Course" : "btech",  
+           "batch_year" : 2020,  
+           "language" : ["HTML", "CSS", "PHP"],  
+           "personal_details" :   
+                     {  
+                      "Father_name" : "Leo",  
+                      "phone_no" : 6312547896,  
+                      "age" : 22,  
+                      "gender" : "Female",  
+                      "City" : "Manchester",  
+                     }             
+}  

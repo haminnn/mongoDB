@@ -1,0 +1,175 @@
+//인덱싱//
+//샘플데이터 생성하기//
+for(i=0; i<500000; i++){
+	db.user.insert({
+		"userid" : i,
+		"name" : "user"+i,
+		"age" : Math.floor(Math.random()*100),
+		"score" : Math.floor(Math.random()*100),
+		"time" : new Date()
+	});
+}
+
+//단일 필드 인덱스생성//
+db.user.createIndex({score:1})
+
+//인덱스 정보 출력
+db.user.getIndexes()
+
+//인덱스제거
+db.user.dropIndex("score_1")
+
+//인덱스 유무 속도 비교
+db.user.find({score:"23"}).explain("executionStats").executionStats.executionTimeMillis
+
+//인덱스 생성후
+db.user.createIndex({score:1})
+
+//비교
+db.user.find({score:"23"}).explain("executionStats").executionStats.executionTimeMillis
+
+//p120
+db.user.find({"username":"user101"}).explain("executionStats")
+
+//p122
+db.user.createIndex({"username":1})
+
+//p123
+db.user.find({"username":"user101"}).explain("executionStats")
+
+//p125
+db.user.find({"username":"user49999"}).explain("executionStats")
+
+//복합인덱스 생성
+//db.collection.createIndex({<field1>:<type>, <field2>:<type>,...})
+db.user.createIndex({userid:1, score:-1})
+
+//인덱스 연습문제
+//1번
+db.user.find({userid:20300})
+db.user.find({"userid":"user20300"}).explain("executionStats").executionStats.executionTimeMillis
+//269밀리 초
+db.user.createIndex({userid:1})
+db.user.find({"userid":"user20300"}).explain("executionStats").executionStats.executionTimeMillis
+//1밀리 초
+
+//2
+db.user.find({score:53})
+db.user.find({score:53}).explain("executionStats").executionStats.executionTimeMillis
+//268밀리 초
+db.user.createIndex({score:1})
+db.user.find({score:53}).explain("executionStats").executionStats.executionTimeMillis
+//10밀리 초
+
+//3
+db.user.find({userid:{gt:3333}})
+db.user.createIndex({userid:1})
+db.user.find({userid:{gt:3333}}).explain("executionStats").executionStats.executionTimeMillis
+//4
+db.user.find({userid:1111}).sort({score:1})
+db.user.createIndex({userid:1,score:-1})
+db.user.find({userid:1111}).sort({score:1}).explain("executionStats").executionStats.executionTimeMillis
+//5
+db.user.find({userid:1222,score:{$gt:22}})
+db.user.createIndex({userid:1,score:1})
+db.user.find({userid:1222,score:{$gt:22}}).explain("executionStats").executionStats.executionTimeMillis
+//6
+db.user.find({score:{$gt:22},age:22})
+db.user.createIndex({score:1,age:1})
+db.user.find({score:{$gt:22},age:22}).explain("executionStats").executionStats.executionTimeMillis
+//7
+db.user.find({userid:{$gt:2222},score:{$gt:22},age:22})
+db.user.createIndex({userid:1,score:1,age:1})
+db.user.find({userid:{$gt:2222},score:{$gt:22},age:22}).explain("executionStats").executionStats.executionTimeMillis
+
+
+//텍스트인덱스 샘플 데이터
+db.library.insertMany([
+  {
+	_id: 101,
+	name : 'Java',
+	description: 'By ABC'},
+  {
+	_id: 102,
+	name : 'MongoDB',
+	description: 'By XYZ'},
+  {
+	_id: 103,
+	name : 'Python',
+	description: 'By ABCD'},
+  {
+	_id: 104,
+	name : 'Engineering Mathematics',
+	description: 'By ****'},
+  {
+	_id: 105,
+	name : 'Saleforce',
+	description: 'By Salesforce'}
+])
+
+//텍스트 인덱스 생성
+db.library.createIndex({ name: "text", description: "text"})
+
+//java가 있는 도큐먼트 반환
+db.library.find({ $text : {$search: "Java"} })
+
+//java book이 있는 도큐먼트 반환
+db.library.find({ $text: {$search : "\"Java Book \""} })
+
+mongoimport neighborhoods.json -c neighborhoods
+
+//p.196
+//레스토랑 검색을 위한 인덱스 생성
+db.neighborhoods.createIndex({location : "2dsphere"})
+db.restaurants.createIndex({location: "2dsphere"})
+
+//데이터 탐색
+db.neighborhoods.find({name: "Clinton"})
+db.restaurants.find({name: "Little Pie Company"})
+
+//현재 지역 찾기
+db.neighborhoods.findOne({
+geometry: {$geoIntersects:{$geometry:{type:"Point",
+ coordinates:[-73.93414657,40.82302903]} }}
+})
+
+//지역 내 모든 레스토랑 찾기
+var neighborhood = db.neighborhoods.findOne({
+geometry: { $geoIntersects: { $geometry: {type: "Point", coordinates: [-73.93414657,40.82302903] } } } 
+})
+
+db.restaurants.find({
+location: { $geoWithin: { $geometry: neighborhood.geometry } } }, {name: 1, _id: 0});
+
+db.restaurants.find({
+location: {
+ $geoWithin : { $centerSphere : [-73.93414657, 40.82302903}, 5/3963.2]} }
+})
+
+//우리나라 json파일 시각화시킬때
+//https://mapshaper.org/ 에서
+//다운로드 받은 TL_SCCO_CTPRVN.json을 drag and drop해 import 시킨다.
+
+
+//파워쉘에서 몽고DB연동시켜 콤파스에서 확인가능
+(base) PS C:\Users\BIT> python -m pip install pymongo
+Collecting pymongo
+  Downloading pymongo-4.0.1-cp39-cp39-win_amd64.whl (354 kB)
+     |████████████████████████████████| 354 kB 6.4 MB/s
+Installing collected packages: pymongo
+Successfully installed pymongo-4.0.1
+(base) PS C:\Users\BIT> python
+Python 3.9.7 (default, Sep 16 2021, 16:59:28) [MSC v.1916 64 bit (AMD64)] :: Anaconda, Inc. on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import pymongo
+>>> import gridfs
+>>> client = pymongo.MongoClient()
+>>> db = client.test
+>>> fs = gridfs.GridFS(db)
+>>> file_id = fs.put(b"Hello, world", filename="foo.txt")
+>>> fs.list()
+['foo.txt']
+>>> fs.get(file_id).read()
+b'Hello, world'
+>>> db.fs.files.distinct("filename")
+['foo.txt']
